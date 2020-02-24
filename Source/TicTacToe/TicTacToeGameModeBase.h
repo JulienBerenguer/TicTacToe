@@ -9,9 +9,11 @@
 /**
  * 
  */
-UCLASS()
-class TICTACTOE_API ATicTacToeGameModeBase : public AGameModeBase
+UCLASS(minimalapi)
+class ATicTacToeGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	ATicTacToeGameModeBase();
 };

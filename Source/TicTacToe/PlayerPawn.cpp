@@ -82,7 +82,8 @@ void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 	UE_LOG(LogTemp, Warning, TEXT("> BoxList"));
 	for (int i = 0; i < BoxNumber; i++) {
 		for (int j = 0; j < BoxNumber; j++) {
-			UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] = [%d]"), i, j, BoxList[i][j])
+			UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] = [%d]"), i, j, BoxList[i][j]);
+			// Appeller la fonction SetBox du Widget
 		}
 	}
 	

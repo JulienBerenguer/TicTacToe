@@ -2,6 +2,7 @@
 
 
 #include "PlayerPawn.h"
+#include "TicTacToeWidget.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -27,7 +28,8 @@ void APlayerPawn::BeginPlay()
 		}*/
 
 		// Create the widget and store it.
-		GameWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
+		//GameWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
+		GameWidget = CreateWidget<UTicTacToeWidget>(GetWorld(), WidgetClass);
 
 		// L'initialise comme owner
 		GameWidget->SetOwningPlayer(GetWorld()->GetFirstPlayerController());
@@ -79,11 +81,14 @@ void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 		PlayerTurn = !PlayerTurn;
 	}
 	
+	int Index = -1;
 	UE_LOG(LogTemp, Warning, TEXT("> BoxList"));
-	for (int i = 0; i < BoxNumber; i++) {
-		for (int j = 0; j < BoxNumber; j++) {
-			UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] = [%d]"), i, j, BoxList[i][j]);
-			// Appeller la fonction SetBox du Widget
+	for (int y = 0; y < BoxNumber; y++) {
+		for (int x = 0; x < BoxNumber; x++) {
+			Index++;
+			UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] {%d} = [%d]"), x, y, Index, BoxList[x][y]);
+			// Appeler la fonction SetBox du Widget
+			Cast<UTicTacToeWidget>(GameWidget)->UpdateGame(BoxList[x][y], Index);
 		}
 	}
 	

@@ -1,5 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+//┌───┬───┬───┐
+//│   │   │   │
+//├───┼───┼───┤
+//│   │   │   │
+//├───┼───┼───┤
+//│   │   │   │
+//└───┴───┴───┘
 
 #include "PlayerPawn.h"
 #include "TicTacToeWidget.h"
@@ -81,6 +87,7 @@ void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 		PlayerTurn = !PlayerTurn;
 	}
 	
+	// Display / Update
 	int Index = -1;
 	UE_LOG(LogTemp, Warning, TEXT("> BoxList"));
 	for (int y = 0; y < BoxNumber; y++) {
@@ -89,6 +96,39 @@ void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 			UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] {%d} = [%d]"), x, y, Index, BoxList[x][y]);
 			// Appeler la fonction SetBox du Widget
 			Cast<UTicTacToeWidget>(GameWidget)->UpdateGame(BoxList[x][y], Index);
+		}
+	}
+
+	// Victory Condition
+	/*
+		┌───┬───┬───┐		┌───┬───┬───┐	
+		│ X │   │   │		│   │   │ X │	
+		├───┼───┼───┤		├───┼───┼───┤	
+		│   │ X │   │		│   │ X │   │	
+		├───┼───┼───┤		├───┼───┼───┤	
+		│   │   │ X │		│ X │   │   │	
+		└───┴───┴───┘		└───┴───┴───┘	
+
+		┌───┬───┬───┐		┌───┬───┬───┐		┌───┬───┬───┐
+		│ X │   │   │		│   │ X │   │		│   │   │ X │
+		├───┼───┼───┤		├───┼───┼───┤		├───┼───┼───┤
+		│ X │   │   │		│   │ X │   │		│   │   │ X │
+		├───┼───┼───┤		├───┼───┼───┤		├───┼───┼───┤
+		│ X │   │   │		│   │ X │   │		│   │   │ X │
+		└───┴───┴───┘		└───┴───┴───┘		└───┴───┴───┘
+
+		┌───┬───┬───┐		┌───┬───┬───┐		┌───┬───┬───┐
+		│ X │ X │ X │		│   │   │   │		│   │   │   │
+		├───┼───┼───┤		├───┼───┼───┤		├───┼───┼───┤
+		│   │   │   │		│ X │ X │ X │		│   │   │   │
+		├───┼───┼───┤		├───┼───┼───┤		├───┼───┼───┤
+		│   │   │   │		│   │   │   │		│ X │ X │ X │
+		└───┴───┴───┘		└───┴───┴───┘		└───┴───┴───┘
+	
+	*/
+	for (int i = 0; i < BoxNumber; i++) {
+		if (BoxList[i][i]) {
+
 		}
 	}
 	

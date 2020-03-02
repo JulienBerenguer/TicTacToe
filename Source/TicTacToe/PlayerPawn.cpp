@@ -69,8 +69,18 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 }
 
 
-
-
+// Choose a box
+/*
+		BoxList --> │ 0 │ 1 │ 2 │  X
+				────┼───┼───┼───┤
+				  0 │ 0 │ 1 │ 2 │	
+				────┼───┼───┼───┤
+				  1 │ 3 │ 4 │ 5 │	
+				────┼───┼───┼───┤	
+				  2 │ 6 │ 7 │ 8 │	<-- Grid Panel Index
+				────┴───┴───┴───┘	
+				  Y
+*/
 void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 	UE_LOG(LogTemp, Warning, TEXT("Button : %d / %d"), ButtonPressed.X, ButtonPressed.Y);
 

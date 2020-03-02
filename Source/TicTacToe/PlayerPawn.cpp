@@ -77,7 +77,7 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 				────┼───┼───┼───┤
 				  1 │ 3 │ 4 │ 5 │	
 				────┼───┼───┼───┤	
-				  2 │ 6 │ 7 │ 8 │	<-- Grid Panel Index
+				  2 │ 6 │ 7 │ 8 │	<-- Grid Panel Index ( = 1*X + BOX_NUMBER*Y )
 				────┴───┴───┴───┘	
 				  Y
 */
@@ -100,8 +100,8 @@ void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 	// Display / Update
 	int Index = -1;
 	UE_LOG(LogTemp, Warning, TEXT("> BoxList"));
-	for (int y = 0; y < BoxNumber; y++) {
-		for (int x = 0; x < BoxNumber; x++) {
+	for (int y = 0; y < BOX_NUMBER; y++) {
+		for (int x = 0; x < BOX_NUMBER; x++) {
 			Index++;
 			UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] {%d} = [%d]"), x, y, Index, BoxList[x][y]);
 			// Appeler la fonction SetBox du Widget
@@ -144,15 +144,54 @@ void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 	└───┴───┴───┘		└───┴───┴───┘		└───┴───┴───┘
 
 */
-void APlayerPawn::VictoryCondition(uint8 IconId){
+bool APlayerPawn::VictoryCondition(uint8 PlayerId){
 	
-	// Check if all conditions are met
-	bool VictoryList[BoxNumber] = { false };
-
-	for (int i = 0; i < BoxNumber; i++) {
-		if (BoxList[i][i] == IconId) {
+	// Diagonal 1
+	for (int i = 0; i < BOX_NUMBER; i++) {
+		if (BoxList[i][i] == PlayerId) {
 			VictoryList[i] = true;
 		}
 	}
+	if (VictoryScreen(PlayerId)) return true;
+
+
+	/*// Diagonal 2
+	for (int i = 0; i < BOX_NUMBER; i++) {
+		if (BoxList[i][i] == PlayerId) {
+			VictoryList[i] = true;
+		}
+	}
+	if (VictoryScreen(PlayerId)) return true;*/
+
+
+	return false;
 	
+}
+
+// If condition valid, then player win
+bool APlayerPawn::VictoryScreen(uint8 PlayerId) {
+
+	bool IsWinner = true;
+
+	// If Victory List contain a single false, then the player don't win
+	for (int i = 0; i < BOX_NUMBER; i++) {
+		if (VictoryList[i] != true) {
+			IsWinner = false;
+			break;
+		}
+	}
+
+	// Actual player win
+	if (IsWinner) {
+		Cast<UTicTacToeWidget>(GameWidget)->Victory(PlayerId);
+	}
+	// Game continue
+	else {
+		// Reset VictoryList
+		for (int i = 0; i < BOX_NUMBER; i++) {
+			VictoryList[i] = false;
+		}
+	}
+
+	return IsWinner;
 }

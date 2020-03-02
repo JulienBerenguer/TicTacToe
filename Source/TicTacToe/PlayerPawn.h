@@ -8,7 +8,7 @@
 #include "Math/IntVector.h"
 #include "PlayerPawn.generated.h"
 
-#define BoxNumber 3
+#define BOX_NUMBER 3
 
 UCLASS()
 class TICTACTOE_API APlayerPawn : public APawn
@@ -42,10 +42,13 @@ public:
 	UUserWidget* GameWidget;
 
 	// List of tic tact toe boxes (0 = blank | 1 = cross | 2 = round)
-	uint8 BoxList[BoxNumber][BoxNumber] = { 0 };
+	uint8 BoxList[BOX_NUMBER][BOX_NUMBER] = { 0 };
 
 	// Player turn
 	bool PlayerTurn = false;
+
+	// Victory check - Check if all conditions are met
+	bool VictoryList[BOX_NUMBER] = { false };
 
 
 	// METHODS
@@ -54,7 +57,7 @@ public:
 		void TicTacToeGame(FIntVector ButtonPressed);
 
 	UFUNCTION()
-		void VictoryCondition(uint8 IconId);
+		bool VictoryCondition(uint8 PlayerId);
 	UFUNCTION()
-		void VictoryScreen(uint8 IconId);
+		bool VictoryScreen(uint8 PlayerId);
 };

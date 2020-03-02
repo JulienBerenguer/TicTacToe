@@ -18,4 +18,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void UpdateGame(int value, int index);
+
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void Victory(int PlayerId);
 };

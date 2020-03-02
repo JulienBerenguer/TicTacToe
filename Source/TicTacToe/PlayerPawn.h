@@ -52,4 +52,9 @@ public:
 public:
 	UFUNCTION(BlueprintCallable)
 		void TicTacToeGame(FIntVector ButtonPressed);
+
+	UFUNCTION()
+		void VictoryCondition(uint8 IconId);
+	UFUNCTION()
+		void VictoryScreen(uint8 IconId);
 };

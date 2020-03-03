@@ -50,6 +50,9 @@ public:
 	// Victory check - Check if all conditions are met
 	bool VictoryList[BOX_NUMBER] = { false };
 
+	// Allow players to play or not => true if one player win
+	bool GameOver = false;
+
 
 	// METHODS
 public:

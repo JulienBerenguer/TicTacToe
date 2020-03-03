@@ -84,33 +84,37 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 	UE_LOG(LogTemp, Warning, TEXT("Button : %d / %d"), ButtonPressed.X, ButtonPressed.Y);
 
-	// Value : 0 = blank | 1 = cross | 2 = round
-	uint8 Value = 0;
-	if (!PlayerTurn) Value = 1;
-	else Value = 2;
+	// If neither player win => can continue to play
+	if (!GameOver) 
+	{
+		// Value : 0 = blank | 1 = cross | 2 = round
+		uint8 Value = 0;
+		if (!PlayerTurn) Value = 1;
+		else Value = 2;
 
-	// If blank box
-	if (BoxList[ButtonPressed.X][ButtonPressed.Y] == 0) {
-		BoxList[ButtonPressed.X][ButtonPressed.Y] = Value;
+		// If blank box
+		if (BoxList[ButtonPressed.X][ButtonPressed.Y] == 0) {
+			BoxList[ButtonPressed.X][ButtonPressed.Y] = Value;
 
-		// Change turn
-		PlayerTurn = !PlayerTurn;
-	}
-
-	// Display / Update
-	int Index = -1;
-	UE_LOG(LogTemp, Warning, TEXT("> BoxList"));
-	for (int y = 0; y < BOX_NUMBER; y++) {
-		for (int x = 0; x < BOX_NUMBER; x++) {
-			Index++;
-			UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] {%d} = [%d]"), x, y, Index, BoxList[x][y]);
-			// Appeler la fonction SetBox du Widget
-			Cast<UTicTacToeWidget>(GameWidget)->UpdateGame(BoxList[x][y], Index);
+			// Change turn
+			PlayerTurn = !PlayerTurn;
 		}
-	}
 
-	// See if victory for current player
-	VictoryCondition(Value);
+		// Display / Update
+		int Index = -1;
+		UE_LOG(LogTemp, Warning, TEXT("> BoxList"));
+		for (int y = 0; y < BOX_NUMBER; y++) {
+			for (int x = 0; x < BOX_NUMBER; x++) {
+				Index++;
+				UE_LOG(LogTemp, Warning, TEXT("Box [%d][%d] {%d} = [%d]"), x, y, Index, BoxList[x][y]);
+				// Appeler la fonction SetBox du Widget
+				Cast<UTicTacToeWidget>(GameWidget)->UpdateGame(BoxList[x][y], Index);
+			}
+		}
+
+		// See if victory for current player
+		GameOver = VictoryCondition(Value);
+	}
 }
 
 // Victory Condition
@@ -146,7 +150,7 @@ void APlayerPawn::TicTacToeGame(FIntVector ButtonPressed) {
 */
 bool APlayerPawn::VictoryCondition(uint8 PlayerId){
 	
-	// Diagonal 1
+	// Diagonal 1 (only if BOX_NUMBER = 3)
 	for (int i = 0; i < BOX_NUMBER; i++) {
 		if (BoxList[i][i] == PlayerId) {
 			VictoryList[i] = true;
@@ -155,14 +159,48 @@ bool APlayerPawn::VictoryCondition(uint8 PlayerId){
 	if (VictoryScreen(PlayerId)) return true;
 
 
-	/*// Diagonal 2
+	// Diagonal 2 (only if BOX_NUMBER = 3)
 	for (int i = 0; i < BOX_NUMBER; i++) {
-		if (BoxList[i][i] == PlayerId) {
+		if (BoxList[i][(BOX_NUMBER-1)-i] == PlayerId) {
 			VictoryList[i] = true;
 		}
 	}
-	if (VictoryScreen(PlayerId)) return true;*/
+	if (VictoryScreen(PlayerId)) return true;
 
+
+	// Vertical lines
+	for (int x = 0; x < BOX_NUMBER; x++) {		// Change column
+		for (int y = 0; y < BOX_NUMBER; y++) {	// All boxes of actual column
+			if (BoxList[x][y] == PlayerId) {
+				VictoryList[y] = true;
+			}
+		}
+		if (VictoryScreen(PlayerId)) return true;
+	}
+
+	// Horizontal lines
+	for (int y = 0; y < BOX_NUMBER; y++) {		// Change line
+		for (int x = 0; x < BOX_NUMBER; x++) {	// All boxes of actual line
+			if (BoxList[x][y] == PlayerId) {
+				VictoryList[x] = true;
+			}
+		}
+		if (VictoryScreen(PlayerId)) return true;
+	}
+
+	// If all lines are filled, but no one win
+	bool Loose = true;
+	for (int y = 0; y < BOX_NUMBER; y++) {
+		for (int x = 0; x < BOX_NUMBER; x++) {
+			if (BoxList[x][y] == 0) {	// If blank
+				Loose = false;
+			}
+		}
+	}
+	if (Loose) {
+		Cast<UTicTacToeWidget>(GameWidget)->Defeat();
+		return true;
+	}
 
 	return false;
 	
